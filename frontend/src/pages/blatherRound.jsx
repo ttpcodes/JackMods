@@ -110,7 +110,7 @@ class BlatherRound extends React.Component {
   render() {
     return (
       <div>
-        <div style={{ display: 'block', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center' }}>
           <input type="file" onChange={this.onFileSelect.bind(this)} />
           <button onClick={this.onExport.bind(this)}>Export</button>
         </div>
