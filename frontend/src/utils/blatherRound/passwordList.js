@@ -76,53 +76,53 @@ const Difficulty = {
 // Need to strip of spaces when importing
 const validWordLists = [
   '<abstract-concept>',
-  '<age-complex>',
   '<age>',
+  '<age-complex>',
   '<alive-dead>',
   '<are-in-relation-to>',
   '<are-known-for>',
   '<area>',
-  '<bad-complex>',
   '<bad>',
-  '<body-complex>',
+  '<bad-complex>',
   '<body>',
-  '<building-complex>',
+  '<body-complex>',
   '<building>',
-  '<color-complex>',
+  '<building-complex>',
   '<color>',
-  '<creature-complex>',
+  '<color-complex>',
   '<creature>',
-  '<emotion-bad-complex>',
+  '<creature-complex>',
   '<emotion-bad>',
-  '<emotion-good-complex>',
+  '<emotion-bad-complex>',
   '<emotion-good>',
-  '<event-complex>',
+  '<emotion-good-complex>',
   '<event>',
+  '<event-complex>',
   '<family-role>',
   '<food>',
   '<general-adjective-dump>',
   '<general-career-sector>',
   '<general-career-status>',
   '<general-noun-dump>',
-  '<general-verb-dump-story-end>',
   '<general-verb-dump>',
+  '<general-verb-dump-story-end>',
   '<genre>',
   '<gerund>',
   '<gets-something-bad>',
   '<gets-something-good>',
-  '<good-complex>',
   '<good>',
+  '<good-complex>',
   '<group>',
   '<hates>',
-  '<idea-complex>',
   '<idea>',
-  '<is-in-relation-to>',
+  '<idea-complex>',
   '<is>',
+  '<is-in-relation-to>',
   '<issues>',
   '<land>',
   '<loves>',
-  '<material-complex>',
   '<material>',
+  '<material-complex>',
   '<media-sensation>',
   '<media-style-adjective>',
   '<media-type>',
@@ -131,8 +131,9 @@ const validWordLists = [
   '<parts-of-body>',
   '<people-types>',
   '<period-of-time>',
-  '<person-complex>',
   '<person>',
+  '<person-complex>',
+  '<place>',
   '<place-complex>',
   '<place-dislike-simple>',
   '<place-feel-emotional-simple>',
@@ -144,23 +145,22 @@ const validWordLists = [
   '<place-see-simple>',
   '<place-talk-to-simple>',
   '<place-touch-simple>',
-  '<place>',
-  '<problem-complex>',
   '<problem>',
+  '<problem-complex>',
   '<protagonist>',
-  '<shape-complex>',
   '<shape>',
-  '<size-complex>',
+  '<shape-complex>',
   '<size>',
+  '<size-complex>',
   '<society>',
   '<symbolizes>',
-  '<taste-complex>',
   '<taste>',
-  '<texture-complex>',
+  '<taste-complex>',
   '<texture>',
+  '<texture-complex>',
   '<thing>',
-  '<tool-complex>',
   '<tool>',
+  '<tool-complex>',
   '<villain>',
   '<wants>',
 ];
@@ -179,7 +179,10 @@ class PasswordEntry {
   }
 
   addAlternateSpelling(altSpelling) {
-    if (this.containsAlternateSpelling(altSpelling)) {
+    if (
+      altSpelling.length === 0 ||
+      this.containsAlternateSpelling(altSpelling)
+    ) {
       return;
     }
     this.alternateSpellings.push(altSpelling);
@@ -209,7 +212,11 @@ class PasswordEntry {
   }
 
   addForbiddenWord(forbiddenWord) {
-    if (this.containsForbiddenWord(forbiddenWord)) {
+    if (
+      forbiddenWord === null || // Thanks Tyra Banks
+      forbiddenWord.length === 0 ||
+      this.containsForbiddenWord(forbiddenWord)
+    ) {
       return;
     }
     this.forbiddenWords.push(forbiddenWord);
@@ -236,6 +243,7 @@ class PasswordEntry {
 
   addTailoredWord(tailoredWord, wordList) {
     if (
+      tailoredWord.length == 0 ||
       this.containsTailoredWord(tailoredWord) ||
       !validWordLists.includes(wordList)
     ) {
@@ -302,12 +310,24 @@ class PasswordList {
   }
 
   addEntry(password) {
+    if (password.length === 0) {
+      return;
+    }
     if (this.containsEntry(password)) {
       return this.getEntry(password);
     }
     const newEntry = new PasswordEntry(password, this.nextID);
     this.content.push(newEntry);
     this.nextID++;
+    this.content.sort((a, b) => {
+      if (a.password.toLowerCase() < b.password.toLowerCase()) {
+        return -1;
+      }
+      if (a.password.toLowerCase() > b.password.toLowerCase()) {
+        return 1;
+      }
+      return 0;
+    });
     return newEntry;
   }
 

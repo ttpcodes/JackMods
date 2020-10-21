@@ -2,7 +2,9 @@ import React from 'react';
 
 const PasswordEditor = (props) => {
   if (props.entry === null) {
-    return <p>Please select a password to edit.</p>;
+    return (
+      <p style={{ textAlign: 'center' }}>Please select a password to edit.</p>
+    );
   }
   const selectedCategory = Object.keys(props.categories)
     .map((key) => props.categories[key])
@@ -16,8 +18,13 @@ const PasswordEditor = (props) => {
   return (
     <>
       <div>
-        <div>
-          <p>You are now editing: {props.entry.password}</p>
+        <div style={{ textAlign: 'center' }}>
+          <h1>{props.entry.password}</h1>
+        </div>
+        <div style={{ marginBottom: '24px', textAlign: 'center' }}>
+          <button onClick={() => props.onRemovePassword(props.entry.password)}>
+            Delete {props.entry.password}
+          </button>
         </div>
         <div
           style={{
@@ -34,6 +41,7 @@ const PasswordEditor = (props) => {
               style={{
                 display: 'grid',
                 grid: 'auto auto auto / 140px 1fr',
+                rowGap: '10px',
                 columnGap: '4px',
                 textAlign: 'left',
               }}
@@ -76,8 +84,32 @@ const PasswordEditor = (props) => {
               </div>
               <div>Alternate Spellings</div>
               <div>
+                <div>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      props.alternateSpellingCallbacks.onAdd(
+                        e.target.querySelector('input').value,
+                      );
+                      e.target.querySelector('input').value = '';
+                    }}
+                  >
+                    <input type="text" />
+                    <button>Add</button>
+                  </form>
+                </div>
                 {props.entry.alternateSpellings.map((entry) => (
-                  <div>{entry}</div>
+                  <div>
+                    <button
+                      onClick={() =>
+                        props.alternateSpellingCallbacks.onRemove(entry)
+                      }
+                      style={{ marginRight: '4px' }}
+                    >
+                      x
+                    </button>
+                    {entry}
+                  </div>
                 ))}
               </div>
             </div>
@@ -87,6 +119,7 @@ const PasswordEditor = (props) => {
               style={{
                 display: 'grid',
                 grid: 'auto auto auto / 140px 1fr',
+                rowGap: '10px',
                 columnGap: '4px',
                 textAlign: 'left',
               }}
@@ -115,14 +148,39 @@ const PasswordEditor = (props) => {
               </div>
               <div>Forbidden Words</div>
               <div>
+                <div>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      props.forbiddenWordCallbacks.onAdd(
+                        e.target.querySelector('input').value,
+                      );
+                      e.target.querySelector('input').value = '';
+                    }}
+                  >
+                    <input type="text" />
+                    <button>Add</button>
+                  </form>
+                </div>
                 {props.entry.forbiddenWords.map((entry) => (
-                  <div>{entry}</div>
+                  <div>
+                    <button
+                      onClick={() =>
+                        props.forbiddenWordCallbacks.onRemove(entry)
+                      }
+                      style={{ marginRight: '4px' }}
+                    >
+                      x
+                    </button>
+                    {entry}
+                  </div>
                 ))}
               </div>
             </div>
           </div>
         </div>
       </div>
+      <br />
       <div
         style={{
           display: 'grid',
@@ -142,18 +200,47 @@ const PasswordEditor = (props) => {
             textAlign: 'left',
           }}
         >
+          <div style={{ gridArea: '1 / 1 / 2 / 3' }}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                props.tailoredWordCallbacks.onAdd(
+                  e.target.querySelector('input[type="text"]').value,
+                  `<${e.target.querySelector('input[list]').value}>`,
+                );
+                e.target.querySelector('input[type="text"]').value = '';
+                e.target.querySelector('input[list]').value = '';
+              }}
+            >
+              <input type="text" />
+              <input list="tailoredWordListDataList" />
+              <datalist id="tailoredWordListDataList">
+                {props.validWordLists.map((wordList) => (
+                  <option value={wordList.replace('<', '').replace('>', '')} />
+                ))}
+                <option value="tool" />
+                <option value="is" />
+                <option value="gerund" />
+              </datalist>
+              <button>Add</button>
+            </form>
+          </div>
           {props.entry.tailoredWords.map((tailoredWord) => (
             <>
-              <div>{tailoredWord.word}</div>
+              <div>
+                <button
+                  onClick={() =>
+                    props.tailoredWordCallbacks.onRemove(tailoredWord.word)
+                  }
+                  style={{ marginRight: '4px' }}
+                >
+                  x
+                </button>
+                {tailoredWord.word}
+              </div>
               <div>{tailoredWord.list.replace('<', '').replace('>', '')}</div>
             </>
           ))}
-          <div>White</div>
-          <div>color-complex</div>
-          <div>Cheese-filled</div>
-          <div>taste-complex</div>
-          <div>Nighttime</div>
-          <div>period-of-time</div>
         </div>
       </div>
     </>
