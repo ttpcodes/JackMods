@@ -6,8 +6,28 @@ class BlatherRound extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      passwordListData: new PasswordList(),
+      passwordList: new PasswordList(),
+      selectedEntry: null,
     };
+  }
+
+  onSetCategory(category) {
+    this.state.selectedEntry.setCategory(category);
+    this.forceUpdate();
+  }
+
+  onSetDifficulty(difficulty) {
+    this.state.selectedEntry.setDifficulty(difficulty);
+    this.forceUpdate();
+  }
+
+  onSetSubcategory(subcategory) {
+    this.state.selectedEntry.setSubcategory(subcategory);
+    this.forceUpdate();
+  }
+
+  onSelectEntry(entry) {
+    this.setState({ selectedEntry: entry });
   }
 
   onFileSelect(event) {
@@ -27,7 +47,7 @@ class BlatherRound extends React.Component {
 
   loadPasswordList(jetText) {
     this.setState({
-      passwordListData: PasswordList.fromObject(JSON.parse(jetText)),
+      passwordList: PasswordList.fromObject(JSON.parse(jetText)),
     });
   }
 
@@ -35,7 +55,16 @@ class BlatherRound extends React.Component {
     return (
       <div>
         <input type="file" onChange={this.onFileSelect.bind(this)} />
-        <PasswordListEditor data={this.state.passwordListData} />
+        <PasswordListEditor
+          data={this.state.passwordList}
+          selectedEntry={this.state.selectedEntry}
+          onSelectEntry={this.onSelectEntry.bind(this)}
+          onSetCategory={this.onSetCategory.bind(this)}
+          onSetDifficulty={this.onSetDifficulty.bind(this)}
+          onSetSubcategory={this.onSetSubcategory.bind(this)}
+          categories={PasswordList.Category}
+          difficulties={PasswordList.Difficulty}
+        />
       </div>
     );
   }

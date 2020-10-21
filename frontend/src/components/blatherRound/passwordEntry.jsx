@@ -11,8 +11,23 @@ class PasswordEntry extends React.Component {
 
   render() {
     return (
-      <div onClick={this.onSelect.bind(this)}>
-        <p>{this.props.entry.password}</p>
+      <div
+        onClick={this.onSelect.bind(this)}
+        style={
+          this.props.selected
+            ? { backgroundColor: 'deepskyblue', padding: '6px' }
+            : {}
+        }
+      >
+        <p>
+          {this.props.selected ? (
+            <u>
+              <b>{this.props.entry.password}</b>
+            </u>
+          ) : (
+            <>{this.props.entry.password}</>
+          )}
+        </p>
       </div>
     );
   }
