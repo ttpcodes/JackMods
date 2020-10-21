@@ -291,6 +291,7 @@ class PasswordList {
         newEntry.addForbiddenWord(forbiddenWord);
       });
       newEntry.setID(entry.id);
+      passwordList.nextID = Math.max(passwordList.nextID, entry.id + 1);
       newEntry.setSubcategory(entry.subcategory);
       entry.tailoredWords.forEach((tailoredWord) => {
         newEntry.addTailoredWord(tailoredWord.word, tailoredWord.list);

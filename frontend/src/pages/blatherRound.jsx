@@ -89,6 +89,18 @@ class BlatherRound extends React.Component {
     reader.readAsText(file);
   }
 
+  onExport() {
+    const link = document.createElement('a');
+    link.setAttribute('download', 'BlankyBlankPasswords.jet');
+    link.setAttribute(
+      'href',
+      `data:text/plain;charset=utf-8,${encodeURIComponent(
+        JSON.stringify(this.state.passwordList),
+      )}`,
+    );
+    link.click();
+  }
+
   loadPasswordList(jetText) {
     this.setState({
       passwordList: PasswordList.fromObject(JSON.parse(jetText)),
@@ -98,11 +110,10 @@ class BlatherRound extends React.Component {
   render() {
     return (
       <div>
-        <input
-          type="file"
-          onChange={this.onFileSelect.bind(this)}
-          style={{ display: 'block', margin: '0 auto' }}
-        />
+        <div style={{ display: 'block', margin: '0 auto' }}>
+          <input type="file" onChange={this.onFileSelect.bind(this)} />
+          <button onClick={this.onExport.bind(this)}>Export</button>
+        </div>
         <PasswordListEditor
           data={this.state.passwordList}
           selectedEntry={this.state.selectedEntry}
