@@ -57,8 +57,8 @@ class BlatherRound extends React.Component {
   }
 
   onAddPassword(password) {
-    this.state.passwordList.addEntry(password);
-    this.forceUpdate();
+    const newPassword = this.state.passwordList.addEntry(password);
+    this.setState({ selectedEntry: newPassword });
   }
 
   onRemovePassword(password) {
